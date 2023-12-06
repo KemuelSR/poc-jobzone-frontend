@@ -17,7 +17,7 @@ const columns = [
 
 const createData = (fit, title) => ({ fit, title });
 
-const Careers = ({ jobZone, answerGlobal}) => {
+const Careers = ({ jobZone, answerGlobal, emailUser}) => {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [careers, setCareers] = useState([]);
@@ -26,13 +26,14 @@ const Careers = ({ jobZone, answerGlobal}) => {
         const fetchData = async () => {
             const data = {
                 answers: answerGlobal.answers,
-                job_zone: jobZone
+                job_zone: jobZone,
+                email: emailUser.email
             }
             try {
                 const response = await axios.post('https://fobi-app-cms7.onrender.com/api/career/', data);
 
                 const formattedResult = response.data.career.map(item => ({
-                    link: item.href,
+                    code: item.code,
                     fit: item.fit,
                     title: item.title
                 }));
@@ -83,7 +84,7 @@ const Careers = ({ jobZone, answerGlobal}) => {
                                         {columns.map((column) => (
                                             <TableCell key={column.id} align="left">
                                                 {column.id === 'title' ? (
-                                                    <a href={row.link} target="_blank" rel="noopener noreferrer">
+                                                    <a href={`https://www.mynextmove.org/profile/summary/${row.code}`} target="_blank" rel="noopener noreferrer">
                                                         {row[column.id]}
                                                     </a>
                                                 ) : (

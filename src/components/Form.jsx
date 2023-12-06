@@ -16,6 +16,7 @@ const Form = () => {
     const [answersGlobal, setAnswerGlobal] = useState({ answers: "" });
     const [activeStep, setActiveStep] = useState(0);
     const [jobZone, setJobZone] = useState("");
+    const [emailUser, setEmailUser] = useState("");
 
     const handleNext = () => {
         if (activeStep === steps.length - 1) {
@@ -34,6 +35,9 @@ const Form = () => {
         setAnswerGlobal((prevAnswers) => ({ ...prevAnswers, answers: prevAnswers.answers + newValues }));
     };
 
+    const handleSetEmailUser = (email) => {
+        setEmailUser(email);
+    };
     const handleSetJobZone = (selectedJobZone) => {
         setJobZone(selectedJobZone);
     };
@@ -59,15 +63,15 @@ const Form = () => {
                 ))}
             </Stepper>
             <div style={{ marginTop: '60px', width: '100%' }}>
-                {activeStep === 0 && <Start />}
+                {activeStep === 0 && <Start setEmailUser={handleSetEmailUser} />}
                 {activeStep === 1 && <Step1 setAnswerGlobal={handleSetAnswerGlobal} />}
                 {activeStep === 2 && <Step2 setAnswerGlobal={handleSetAnswerGlobal} />}
                 {activeStep === 3 && <Step3 setAnswerGlobal={handleSetAnswerGlobal} />}
                 {activeStep === 4 && <Step4 setAnswerGlobal={handleSetAnswerGlobal} />}
                 {activeStep === 5 && <Step5 setAnswerGlobal={handleSetAnswerGlobal} />}
-                {activeStep === 6 && <Result answerGlobal={answersGlobal} />}
+                {activeStep === 6 && <Result answerGlobal={answersGlobal} emailUser={emailUser} />}
                 {activeStep === 7 && <JobZone setJobZone={handleSetJobZone} />}
-                {activeStep === 8 && <Careers jobZone={jobZone} answerGlobal={answersGlobal} />}
+                {activeStep === 8 && <Careers jobZone={jobZone} answerGlobal={answersGlobal} emailUser={emailUser} />}
             </div>
             <div style={{ marginTop: 'auto', display: 'flex', justifyContent: 'space-between' }}>
                 <Button disabled={activeStep === 0} onClick={handleBack}>

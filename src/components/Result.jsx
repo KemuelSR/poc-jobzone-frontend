@@ -3,13 +3,17 @@ import axios from 'axios';
 import { Grid, Paper, Typography } from '@mui/material';
 import BarChart from './BarChart';
 
-export const Result = ({ answerGlobal }) => {
+export const Result = ({ answerGlobal, emailUser }) => {
     const [result, setResult] = useState([]);
 
     useEffect(() => {
+        const formatData = {
+            answers: answerGlobal.answers,
+            email: emailUser.email
+        }
         const fetchData = async () => {
             try {
-                const response = await axios.post('https://fobi-app-cms7.onrender.com/api/jobzone/', answerGlobal);
+                const response = await axios.post('https://fobi-app-cms7.onrender.com/api/jobzone/', formatData);
 
                 const formattedResult = response.data.result.map(item => ({
                     profile: item.area,
