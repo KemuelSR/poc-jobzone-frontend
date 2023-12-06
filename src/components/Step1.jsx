@@ -44,7 +44,6 @@ const Step1 = ({ setAnswerGlobal }) => {
                     id: key,
                     text: response.data.actions.PUT[key].label,
                 }));
-                console.log(response.data);
                 setQuestions(newQuestions);
             } catch (error) {
                 console.error('Erro na requisição:', error);
@@ -70,7 +69,7 @@ const Step1 = ({ setAnswerGlobal }) => {
     };
 
     const iconSpacing = '18px';
-
+    
     return (
         <Grid container spacing={2} style={{marginTop: '-25px'}}>
             <Grid item xs={12} style={{ display: 'flex', marginLeft: '75px' }}>

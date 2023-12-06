@@ -36,7 +36,6 @@ const Careers = ({ jobZone, answerGlobal}) => {
                     fit: item.fit,
                     title: item.title
                 }));
-                console.log(formattedResult);
                 setCareers(formattedResult);
 
             } catch (error) {
