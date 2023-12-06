@@ -58,14 +58,25 @@ const Step1 = ({ setAnswerGlobal }) => {
 
     let questionNumber = 1;
 
+    const validateForm = () => {
+        for (const question of questions) {
+            if (!answers[question.id]) {
+                alert(`Por favor, responda a pergunta: ${question.text}`);
+                return false;
+            }
+        }
+        return true;
+    }
     const handleSubmit = () => {
-        axios.put('https://fobi-app-cms7.onrender.com/api/fobi-form-entry/form1/', answers)
-            .then(response => {
-                setAnswerGlobal(response.data);
-            })
-            .catch(error => {
-                console.error('Erro na requisição PUT:', error);
-            });
+        if (validateForm()){
+            axios.put('https://fobi-app-cms7.onrender.com/api/fobi-form-entry/form1/', answers)
+                .then(response => {
+                    setAnswerGlobal(response.data);
+                })
+                .catch(error => {
+                    console.error('Erro na requisição PUT:', error);
+                });
+        }
     };
 
     const iconSpacing = '18px';

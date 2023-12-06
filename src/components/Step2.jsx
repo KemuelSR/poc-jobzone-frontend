@@ -43,9 +43,9 @@ const Step2 = ({ setAnswerGlobal }) => {
                 const newQuestions = Object.keys(response.data.actions.PUT).map((key) => ({
                     id: key,
                     text: response.data.actions.PUT[key].label,
-                  }));
-          
-                  setQuestions(newQuestions);
+                }));
+
+                setQuestions(newQuestions);
             } catch (error) {
                 console.error('Erro na requisição:', error);
             }
@@ -58,20 +58,32 @@ const Step2 = ({ setAnswerGlobal }) => {
     };
 
     let questionNumber = 13;
+
+    const validateForm = () => {
+        for (const question of questions) {
+            if (!answers[question.id]) {
+                alert(`Por favor, responda a pergunta: ${question.text}`);
+                return false;
+            }
+        }
+        return true;
+    }
     const handleSubmit = () => {
-        axios.put('https://fobi-app-cms7.onrender.com/api/fobi-form-entry/form2/', answers)
-            .then(response => {
-                setAnswerGlobal(response.data);
-            })
-            .catch(error => {
-                console.error('Erro na requisição PUT:', error);
-            });
+        if (validateForm()) {
+            axios.put('https://fobi-app-cms7.onrender.com/api/fobi-form-entry/form2/', answers)
+                .then(response => {
+                    setAnswerGlobal(response.data);
+                })
+                .catch(error => {
+                    console.error('Erro na requisição PUT:', error);
+                });
+        }
     };
 
     const iconSpacing = '18px';
 
     return (
-        <Grid container spacing={2} style={{marginTop: '-25px'}}>
+        <Grid container spacing={2} style={{ marginTop: '-25px' }}>
             <Grid item xs={12} style={{ display: 'flex', marginLeft: '75px' }}>
                 {[<StronglyDislikeIcon />, <DislikeIcon />, <UnsureIcon />, <LikeIcon />, <StronglyLikeIcon />].map((icon, index) => (
                     <Icon key={index} style={{ marginRight: iconSpacing }}>

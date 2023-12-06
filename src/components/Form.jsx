@@ -19,6 +19,10 @@ const Form = () => {
     const [emailUser, setEmailUser] = useState("");
 
     const handleNext = () => {
+        if (activeStep === 7 && jobZone==='') {
+            alert('Selecione uma zona de trabalho');
+            return;
+        }
         if (activeStep === steps.length - 1) {
             alert('Obrigado!');
         } else {
