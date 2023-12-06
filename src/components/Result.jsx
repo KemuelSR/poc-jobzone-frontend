@@ -35,7 +35,7 @@ export const Result = ({ answerGlobal }) => {
                 <Typography variant="h4" gutterBottom>
                     Aqui estão os resultados do seu perfil de interesse!
                 </Typography>
-                <Paper elevation={3} style={{ padding: '16px', height: '100%', overflowY: 'auto', height: '450px' }}>
+                <Paper elevation={3} style={{ padding: '16px', overflowY: 'auto', height: '450px' }}>
                     {result.map((item) => (
                         <div key={item.area} style={{ marginBottom: '20px' }}>
                             <Typography variant="h6" gutterBottom>
