@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { FormControl, FormLabel, Radio, Button, Grid, IconButton } from '@mui/material';
+import { FormControl, FormLabel, Radio, Button, Grid, Typography } from '@mui/material';
+import Icon from '@mui/material/Icon';
 import StronglyDislikeIcon from '@mui/icons-material/SentimentVeryDissatisfiedOutlined';
 import DislikeIcon from '@mui/icons-material/SentimentDissatisfiedOutlined';
 import UnsureIcon from '@mui/icons-material/SentimentSatisfiedOutlined';
@@ -56,6 +57,8 @@ const Step5 = ({ setAnswerGlobal }) => {
         setAnswers((prevAnswers) => ({ ...prevAnswers, [question]: answer }));
     };
 
+    let questionNumber = 49;
+
     const handleSubmit = () => {
 
         axios.put('https://fobi-app-cms7.onrender.com/api/fobi-form-entry/form5/', answers)
@@ -67,11 +70,25 @@ const Step5 = ({ setAnswerGlobal }) => {
             });
     };
 
+    const iconSpacing = '18px';
+
     return (
-        <Grid container spacing={2}>
+        <Grid container spacing={2} style={{marginTop: '-25px'}}>
+            <Grid item xs={12} style={{ display: 'flex', marginLeft: '75px' }}>
+                {[<StronglyDislikeIcon />, <DislikeIcon />, <UnsureIcon />, <LikeIcon />, <StronglyLikeIcon />].map((icon, index) => (
+                    <Icon key={index} style={{ marginRight: iconSpacing }}>
+                        {icon}
+                    </Icon>
+                ))}
+            </Grid>
             {questions.map((question) => (
                 <React.Fragment key={question.id}>
-                    <Grid item xs={4} style={{ paddingTop: 0 }}>
+                    <Grid item xs={1} style={{ paddingTop: 0, marginTop: '8px', textAlign: 'right', marginRight: '-10px' }}>
+                        <Typography variant="body1">
+                            {questionNumber++} -
+                        </Typography>
+                    </Grid>
+                    <Grid item xs={3} style={{ paddingTop: 0 }}>
                         <FormControl component="fieldset" style={{ width: '100%' }}>
                             <ColorRadioButtons
                                 selectedValue={answers[question.id] || ''}
@@ -80,7 +97,7 @@ const Step5 = ({ setAnswerGlobal }) => {
                         </FormControl>
                     </Grid>
                     <Grid item xs={8} style={{ paddingTop: 0 }}>
-                        <FormControl component="fieldset" style={{ width: '100%' }}>
+                        <FormControl component="fieldset" style={{ width: '100%', marginTop: '8px' }}>
                             <FormLabel component="legend">{question.text}</FormLabel>
                         </FormControl>
                     </Grid>
