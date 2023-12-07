@@ -1,14 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, forwardRef, useImperativeHandle } from 'react';
 import axios from 'axios';
-import { Container, Typography, TextField, Button, Grid } from '@mui/material';
+import { Container, Typography, TextField } from '@mui/material';
 import StronglyDislikeIcon from '@mui/icons-material/SentimentVeryDissatisfiedOutlined';
 import DislikeIcon from '@mui/icons-material/SentimentDissatisfiedOutlined';
 import UnsureIcon from '@mui/icons-material/SentimentSatisfiedOutlined';
 import LikeIcon from '@mui/icons-material/MoodOutlined';
 import StronglyLikeIcon from '@mui/icons-material/SentimentVerySatisfiedOutlined';
 
-
-export const Start = ({ setEmailUser }) => {
+export const Start = forwardRef(({ setEmailUser }, ref) => {
     const [email, setEmail] = useState('');
 
     const handleEmailChange = (event) => {
@@ -17,22 +16,32 @@ export const Start = ({ setEmailUser }) => {
 
     const formatEmail = {
         email: email,
-    }
+    };
 
     const handleSubmit = () => {
-        axios.put('https://fobi-app-cms7.onrender.com/api/fobi-form-entry/form-email/', formatEmail)
-            .then(response => {
-                setEmailUser(formatEmail);
-            })
-            .catch(error => {
-                if (error.response && error.response.data && error.response.data.email) {
-                    console.error('Erro na requisição PUT:', error.response.data.email);
-                    alert(error.response.data.email[0]);
-                } else {
-                    console.error('Erro na requisição PUT:', error);
-                }
-            });
+        return new Promise((resolve, reject) => {
+            axios
+                .put('https://fobi-app-cms7.onrender.com/api/fobi-form-entry/form-email/', formatEmail)
+                .then((response) => {
+                    setEmailUser(formatEmail);
+                    resolve();
+                })
+                .catch((error) => {
+                    if (error.response && error.response.data && error.response.data.email) {
+                        console.error('Erro na requisição PUT:', error.response.data.email);
+                        alert(error.response.data.email[0]);
+                        reject(error.response.data.email[0]);
+                    } else {
+                        console.error('Erro na requisição PUT:', error);
+                        reject('Erro na requisição PUT');
+                    }
+                });
+        });
     };
+
+    useImperativeHandle(ref, () => ({
+        handleSubmit,
+    }));
 
     const icons = [
         { icon: <StronglyDislikeIcon />, description: 'Não Gosto Muito' },
@@ -41,6 +50,7 @@ export const Start = ({ setEmailUser }) => {
         { icon: <LikeIcon />, description: 'Gosto' },
         { icon: <StronglyLikeIcon />, description: 'Gosto Muito' },
     ];
+
     return (
         <Container>
             <Typography variant="h4" gutterBottom>
@@ -77,12 +87,6 @@ export const Start = ({ setEmailUser }) => {
                 onChange={handleEmailChange}
                 style={{ marginTop: '-15px' }}
             />
-
-            <Grid item xs={12} style={{ marginTop: '20px' }}>
-                <Button variant="contained" color="secondary" onClick={handleSubmit}>
-                    Enviar
-                </Button>
-            </Grid>
         </Container>
     );
-};
+});

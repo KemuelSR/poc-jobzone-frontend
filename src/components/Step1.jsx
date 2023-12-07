@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, forwardRef, useImperativeHandle } from 'react';
 import axios from 'axios';
-import { FormControl, FormLabel, Radio, Button, Grid, Typography } from '@mui/material';
+import { FormControl, FormLabel, Radio, Grid, Typography } from '@mui/material';
 import Icon from '@mui/material/Icon';
 import StronglyDislikeIcon from '@mui/icons-material/SentimentVeryDissatisfiedOutlined';
 import DislikeIcon from '@mui/icons-material/SentimentDissatisfiedOutlined';
@@ -28,7 +28,7 @@ const ColorRadioButtons = ({ selectedValue, handleChange }) => {
     );
 };
 
-const Step1 = ({ setAnswerGlobal }) => {
+export const Step1 = forwardRef(({ setAnswerGlobal }, ref) => {
     const [answers, setAnswers] = useState({});
     const [questions, setQuestions] = useState([]);
 
@@ -68,21 +68,29 @@ const Step1 = ({ setAnswerGlobal }) => {
         return true;
     }
     const handleSubmit = () => {
-        if (validateForm()){
-            axios.put('https://fobi-app-cms7.onrender.com/api/fobi-form-entry/form1/', answers)
-                .then(response => {
-                    setAnswerGlobal(response.data);
-                })
-                .catch(error => {
-                    console.error('Erro na requisição PUT:', error);
-                });
-        }
+        return new Promise((resolve, reject) => {
+            if (validateForm()) {
+                axios.put('https://fobi-app-cms7.onrender.com/api/fobi-form-entry/form1/', answers)
+                    .then(response => {
+                        setAnswerGlobal(response.data);
+                        resolve();
+                    })
+                    .catch(error => {
+                        console.error('Erro na requisição PUT:', error);
+                        reject('Erro na requisição PUT');
+                    });
+            }
+        });
     };
 
+    useImperativeHandle(ref, () => ({
+        handleSubmit,
+    }));
+
     const iconSpacing = '18px';
-    
+
     return (
-        <Grid container spacing={2} style={{marginTop: '-25px'}}>
+        <Grid container spacing={2} style={{ marginTop: '-25px' }}>
             <Grid item xs={12} style={{ display: 'flex', marginLeft: '75px' }}>
                 {[<StronglyDislikeIcon />, <DislikeIcon />, <UnsureIcon />, <LikeIcon />, <StronglyLikeIcon />].map((icon, index) => (
                     <Icon key={index} style={{ marginRight: iconSpacing }}>
@@ -112,14 +120,7 @@ const Step1 = ({ setAnswerGlobal }) => {
                     </Grid>
                 </React.Fragment>
             ))}
-
-            <Grid item xs={12} style={{ marginTop: '20px' }}>
-                <Button variant="contained" color="secondary" onClick={handleSubmit}>
-                    Enviar
-                </Button>
-            </Grid>
         </Grid>
     );
-};
+});
 
-export default Step1;
